@@ -1,0 +1,103 @@
+# -----------------------------------------------------------------------
+# MISCELLANEOUS / SYSTEM
+# -----------------------------------------------------------------------
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# -----------------------------------------------------------------------
+# IDEs (VS Code, IntelliJ, Android Studio)
+# -----------------------------------------------------------------------
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.project
+.classpath
+
+# -----------------------------------------------------------------------
+# FLUTTER / DART / PUB
+# -----------------------------------------------------------------------
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+**/doc/api/
+
+# Note: Only ignore *.g.dart if you want team members to run
+# 'build_runner' manually after cloning.
+# *.g.dart
+
+# -----------------------------------------------------------------------
+# PLATFORM SPECIFIC (iOS, Android, Windows, etc.)
+# -----------------------------------------------------------------------
+# Android
+android/local.properties
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# iOS / macOS
+**/ios/Pods/
+**/ios/Podfile.lock
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Flutter/appframeworkdir
+**/ios/ServiceDefinitions.json
+
+# Desktop builds
+/build/windows/
+/build/linux/
+/build/macos/
+
+# -----------------------------------------------------------------------
+# SECURITY & SENSITIVE DATA (DO NOT REMOVE)
+# -----------------------------------------------------------------------
+# Firebase / Google Config
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+ios/firebase_app_id_file.json
+lib/firebase_options.dart
+
+# Environment Secrets
+.env
+.env.*
+# This allows you to keep a template visible for others
+!*.example
+
+# Signing Keys (Android/iOS Certificates)
+*.keystore
+*.jks
+*.p12
+*.pfx
+*.pem
+*.mobileprovision
+
+# -----------------------------------------------------------------------
+# DATABASE / LOCAL STORAGE
+# -----------------------------------------------------------------------
+*.hive
+hive/
+
+# -----------------------------------------------------------------------
+# SYMBOLS & OBFUSCATION
+# -----------------------------------------------------------------------
+app.*.symbols
+app.*.map.json
+*.ipa
+*.apk
+*.app
