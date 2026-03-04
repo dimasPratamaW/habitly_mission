@@ -26,35 +26,46 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Future<void> checkUser() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => isLoading = true);
-    await ref
-        .read(authNotifierProvider.notifier)
-        .login(
-          EmailAuthCredentials(
-            email: emailController.text.trim(),
-            password: passwordController.text.trim(),
-          ),
-        ).timeout(Duration(seconds: 15),onTimeout: (){
-          setState(() => isLoading = false);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Connection timeout. Check your internet!')),
-          );
-    });
+    try {
+      await ref
+          .read(authNotifierProvider.notifier)
+          .login(
+        EmailAuthCredentials(
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
+        ),
+      ).timeout(Duration(seconds: 15), onTimeout: () {
+        setState(() => isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Connection timeout. Check your internet!')),
+        );
+      });
 
-    final authState = ref.read(authNotifierProvider);
-    authState.when(
-      data: (user) {
-        if (user != null) {
-          if (!mounted) return;
-          Navigator.pushReplacementNamed(context, DashboardHabit.routeName);
-        }
-      },
-      error: (e, _) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(e.toString())));
-      },
-      loading: () {},
-    );
+      final authState = ref.read(authNotifierProvider);
+      authState.when(
+        data: (user) {
+          if (user != null) {
+            if (!mounted) return;
+            Navigator.pushReplacementNamed(context, DashboardHabit.routeName);
+          }
+        },
+        error: (e, _) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(e.toString())));
+          setState(() {
+            isLoading = false;
+          });
+        },
+        loading: () {},
+      );
+    }
+    finally{
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
