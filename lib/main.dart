@@ -4,13 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:habitly_mission/firebase_options.dart';
-import 'package:habitly_mission/models/list_habit_hive.dart';
-import 'package:habitly_mission/screen/dashboard/main_dashboard.dart';
-import 'package:habitly_mission/screen/initiate_pages/dashboard_habit.dart';
-import 'package:habitly_mission/screen/initiate_pages/dashboard_time.dart';
-import 'package:habitly_mission/screen/login.dart';
-import 'package:habitly_mission/screen/register.dart';
-import 'screen/splash_screen.dart';
+import 'package:habitly_mission/data/models/list_habit_hive.dart';
+import 'package:habitly_mission/presentation/screens/dashboard/dashboard_screen.dart';
+import 'package:habitly_mission/presentation/screens/initiate_pages/dashboard_habit.dart';
+import 'package:habitly_mission/presentation/screens/initiate_pages/dashboard_time.dart';
+import 'package:habitly_mission/presentation/screens/login_screen.dart';
+import 'package:habitly_mission/presentation/screens/register_screen.dart';
+import 'presentation/screens/splash_screen.dart';
 import 'package:hive_ce/hive_ce.dart';
 
 void main() async{
@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
         RegisterView.routeName: (_) => const RegisterScreen(),
         DashboardHabit.routeName: (_) => const DashboardHabit(),
         DashboardTime.routeName: (_) => const DashboardTime(),
-        MainDashboard.routeName: (_) => const MainDashboard()
+        DashboardScreen.routeName: (_) => const DashboardScreen()
       },
     );
   }
