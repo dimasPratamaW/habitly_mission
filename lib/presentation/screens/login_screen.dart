@@ -6,9 +6,7 @@ import 'package:habitly_mission/presentation/screens/initiate_pages/dashboard_ha
 import 'package:habitly_mission/presentation/screens/register_screen.dart';
 import 'package:habitly_mission/widget/custom_dialog.dart';
 import 'package:habitly_mission/widget/custom_field.dart';
-
 import '../../style/app_color.dart';
-import '../../widget/custom_dialog.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   static const routeName = '/login';

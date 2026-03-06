@@ -1,11 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habitly_mission/widget/custom_dialog.dart';
 import 'package:intl/intl.dart';
-import 'package:habitly_mission/data/models/list_habit_hive.dart';
 import 'package:habitly_mission/presentation/state/auth_providers.dart';
 import 'package:habitly_mission/presentation/state/habit_providers.dart';
 import 'package:habitly_mission/style/app_color.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class HabitScheduleScreen extends ConsumerStatefulWidget {
   static const routeName = '/dashboard_schedule';
@@ -13,20 +13,60 @@ class HabitScheduleScreen extends ConsumerStatefulWidget {
   const HabitScheduleScreen({super.key});
 
   @override
-  ConsumerState<HabitScheduleScreen> createState() => _HabitScheduleScreenState();
+  ConsumerState<HabitScheduleScreen> createState() =>
+      _HabitScheduleScreenState();
 }
 
 class _HabitScheduleScreenState extends ConsumerState<HabitScheduleScreen> {
-  static const List<Map<String, String>> days = [
-    {'letter': 'M', 'number': '1'},
-    {'letter': 'T', 'number': '2'},
-    {'letter': 'W', 'number': '3'},
-    {'letter': 'T', 'number': '4'},
-    {'letter': 'F', 'number': '5'},
-    {'letter': 'S', 'number': '6'},
-    {'letter': 'S', 'number': '7'},
-  ];
+  DateTime _focusedDay = DateTime.now();
+  DateTime _selectedDay = DateTime.now();
+  CalendarFormat _calendarFormat = CalendarFormat.week;
+  bool _showAll = true;
 
+  Widget _calendarTable() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: Column(
+        children: [
+          // ← reset button above calendar
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton.icon(
+                onPressed: () => setState(() => _showAll = true),
+                icon: const Icon(Icons.filter_alt_off, size: 16),
+                label: Text(
+                  _showAll ? 'Showing All' : 'Show All',
+                  style: TextStyle(
+                    color: _showAll ? Colors.grey : Colors.blue,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          TableCalendar(
+            focusedDay: _focusedDay,
+            firstDay: DateTime.utc(2025, 1, 1),
+            lastDay: DateTime.utc(2030, 1, 1),
+            calendarFormat: _calendarFormat,
+            onFormatChanged: (format) => setState(() => _calendarFormat = format),
+            availableCalendarFormats: const {
+              CalendarFormat.month: 'Month',
+              CalendarFormat.week: 'Week',
+            },
+            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _focusedDay = focusedDay;
+                _selectedDay = selectedDay;
+                _showAll = false;
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     final uid = ref.watch(currentUidProvider); // ← get uid
@@ -34,76 +74,54 @@ class _HabitScheduleScreenState extends ConsumerState<HabitScheduleScreen> {
 
     final sortOption = ref.watch(habitSortProvider);
     final filterOption = ref.watch(habitFilterProvider);
+    final selectedDateStr = DateFormat("dd/MM/yyyy").format(_selectedDay);
 
     if (uid == null) return const Center(child: CircularProgressIndicator());
 
     final pullData = ref.watch(habitStreamProvider(uid));
-    // final pullData = ref.watch(habitListProvider);// this is for hive
     return Scaffold(
       backgroundColor: colors.background,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 16),
-          SizedBox(
-            // tanggal diatas
-            height: 80,
-            child: Padding(
-              padding: EdgeInsetsGeometry.directional(start: 20),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: days.length,
-                itemBuilder: (context, index) {
-                  final day = days[index];
-                  return SizedBox(
-                    width: 50,
-                    child: Column(
-                      children: [
-                        Text(day['letter']!),
-                        SizedBox(height: 10),
-                        Container(
-                          width: 30,
-                          height: 30,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFF5F5F5),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(child: Text(day['number']!)),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
+          _calendarTable(),
           SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               //SORT BUTTON
               Column(
-                children:[
-                  SizedBox(height: 5,),
+                children: [
+                  SizedBox(height: 5),
                   Text('Sort by Date'),
                   Padding(
-                    padding: EdgeInsetsGeometry.symmetric(horizontal: 16,vertical: 10),
+                    padding: EdgeInsetsGeometry.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
                     child: Container(
-                      decoration:BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color:colors.border)
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: colors.border),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<HabitSort>(
                           value: ref.watch(habitSortProvider),
                           padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
                           items: const [
-                            DropdownMenuItem(value: HabitSort.dateNewest, child: Text('Newest')),
-                            DropdownMenuItem(value: HabitSort.dateOldest, child: Text('Oldest')),
+                            DropdownMenuItem(
+                              value: HabitSort.dateNewest,
+                              child: Text('Newest'),
+                            ),
+                            DropdownMenuItem(
+                              value: HabitSort.dateOldest,
+                              child: Text('Oldest'),
+                            ),
                           ],
                           onChanged: (value) {
                             if (value != null) {
-                              ref.read(habitSortProvider.notifier).state = value;
+                              ref.read(habitSortProvider.notifier).state =
+                                  value;
                             }
                           },
                         ),
@@ -114,47 +132,51 @@ class _HabitScheduleScreenState extends ConsumerState<HabitScheduleScreen> {
               ),
               //FILTER BUTTON
               Column(
-                children:[
-                  SizedBox(height: 5,),
+                children: [
+                  SizedBox(height: 5),
                   Text('Filter by Status'),
                   Padding(
-                  padding: EdgeInsetsGeometry.symmetric(horizontal: 16,vertical: 10),
-                  child: Container(
-                    decoration:BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color:colors.border)
+                    padding: EdgeInsetsGeometry.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
                     ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<HabitFilter>(
-                        value: ref.watch(habitFilterProvider),
-                        padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
-                        items: const [
-                          DropdownMenuItem(
-                            value: HabitFilter.all,
-                            child: Text('All'),
-                          ),
-                          DropdownMenuItem(
-                            value: HabitFilter.upcoming,
-                            child: Text('Upcoming'),
-                          ),
-                          DropdownMenuItem(
-                            value: HabitFilter.ongoing,
-                            child: Text('Ongoing'),
-                          ),
-                          DropdownMenuItem(
-                            value: HabitFilter.completed,
-                            child: Text('Completed'),
-                          ),
-                        ],
-                        onChanged: (value) {
-                          if (value != null) {
-                            ref.read(habitFilterProvider.notifier).state = value;
-                          }
-                        },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: colors.border),
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<HabitFilter>(
+                          value: ref.watch(habitFilterProvider),
+                          padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
+                          items: const [
+                            DropdownMenuItem(
+                              value: HabitFilter.all,
+                              child: Text('All'),
+                            ),
+                            DropdownMenuItem(
+                              value: HabitFilter.upcoming,
+                              child: Text('Upcoming'),
+                            ),
+                            DropdownMenuItem(
+                              value: HabitFilter.ongoing,
+                              child: Text('Ongoing'),
+                            ),
+                            DropdownMenuItem(
+                              value: HabitFilter.completed,
+                              child: Text('Completed'),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            if (value != null) {
+                              ref.read(habitFilterProvider.notifier).state =
+                                  value;
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ),
-                ),
                 ],
               ),
             ],
@@ -175,6 +197,9 @@ class _HabitScheduleScreenState extends ConsumerState<HabitScheduleScreen> {
               data: (activities) {
                 //FOR FILTER
                 var filtered = activities.where((habit) {
+                  if (!_showAll && habit.date != selectedDateStr) {
+                    return false;
+                  }
                   switch (filterOption) {
                     case HabitFilter.all:
                       return true;
@@ -260,22 +285,27 @@ class _HabitScheduleScreenState extends ConsumerState<HabitScheduleScreen> {
                                             "this ${activity.title} habit will be deleted, are you really sure?",
                                           ),
                                           actionsPadding:
-                                          EdgeInsetsDirectional.symmetric(
-                                            horizontal: 10,
-                                            vertical: 10,
-                                          ),
+                                              EdgeInsetsDirectional.symmetric(
+                                                horizontal: 10,
+                                                vertical: 10,
+                                              ),
                                           actions: [
                                             ElevatedButton(
                                               style: ElevatedButton.styleFrom(
-                                                backgroundColor: Color(0xFFF5F5F5),
+                                                backgroundColor: Color(
+                                                  0xFFF5F5F5,
+                                                ),
                                               ),
                                               onPressed: () {
                                                 ref
                                                     .read(
-                                                  habitNotifierProvider
-                                                      .notifier,
-                                                )
-                                                    .deleteHabit(uid, activity.id);
+                                                      habitNotifierProvider
+                                                          .notifier,
+                                                    )
+                                                    .deleteHabit(
+                                                      uid,
+                                                      activity.id,
+                                                    );
                                                 Navigator.pop(context);
                                               },
                                               child: const Text("YES"),
@@ -299,7 +329,7 @@ class _HabitScheduleScreenState extends ConsumerState<HabitScheduleScreen> {
                                     },
                                     child: Icon(Icons.delete_forever),
                                   ),
-                                ]
+                                ],
                               ),
                             ],
                           ),
