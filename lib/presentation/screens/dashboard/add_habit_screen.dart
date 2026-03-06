@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habitly_mission/widget/custom_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:habitly_mission/presentation/state/auth_providers.dart';
 import 'package:habitly_mission/presentation/state/habit_providers.dart';
@@ -7,8 +8,7 @@ import 'package:habitly_mission/style/app_color.dart';
 import 'package:habitly_mission/widget/custom_field.dart';
 
 class AddHabitScreen extends ConsumerStatefulWidget {
-
-  const AddHabitScreen({super.key,});
+  const AddHabitScreen({super.key});
 
   @override
   ConsumerState<AddHabitScreen> createState() => _AddHabitScreenState();
@@ -46,7 +46,6 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
     }
   }
 
-
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -60,11 +59,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
       '18:00',
       '21:00',
     ];
-    final List<String> statusOptions = [
-      'Upcoming',
-      'Ongoing',
-      'Completed',
-    ];
+    final List<String> statusOptions = ['Upcoming', 'Ongoing', 'Completed'];
 
     final colors = AppColors.of(context);
 
@@ -75,7 +70,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
           key: formKey,
           child: Column(
             children: [
-              SizedBox(height: 20,),
+              SizedBox(height: 20),
               CustomField(
                 label: 'Habit Name',
                 backgroundColor: Colors.white,
@@ -116,7 +111,10 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                         child: GestureDetector(
                           onTap: pickDate,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(color: Colors.grey),
@@ -135,9 +133,12 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                         ),
                       ),
                       SizedBox(height: 10),
-                      Text('When we should remind you ?'),//time OPTIONS
+                      Text('When we should remind you ?'), //time OPTIONS
                       Padding(
-                        padding: EdgeInsetsGeometry.symmetric(vertical: 10, horizontal: 20),
+                        padding: EdgeInsetsGeometry.symmetric(
+                          vertical: 10,
+                          horizontal: 20,
+                        ),
                         child: DropdownMenu<String>(
                           width: double.infinity,
                           initialSelection: timeOptions[0],
@@ -156,8 +157,12 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                       ),
                       SizedBox(height: 10),
                       Text('Status of habit?'),
-                      Padding(// Status
-                        padding: EdgeInsetsGeometry.symmetric(vertical: 10, horizontal: 20),
+                      Padding(
+                        // Status
+                        padding: EdgeInsetsGeometry.symmetric(
+                          vertical: 10,
+                          horizontal: 20,
+                        ),
                         child: DropdownMenu<String>(
                           width: double.infinity,
                           initialSelection: statusOptions[0],
@@ -185,36 +190,36 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                   //button register
                   onPressed: () async {
                     if (!formKey.currentState!.validate()) return;
-                    if(uid == null) return;
+                    if (uid == null) return;
 
-                      // await ref.read(habitListProvider.notifier).addHabit(
-                      //   titleHabit.text,
-                      //   descHabit.text,
-                      //   timeHabit,
-                      // );
+                    // await ref.read(habitListProvider.notifier).addHabit(
+                    //   titleHabit.text,
+                    //   descHabit.text,
+                    //   timeHabit,
+                    // );
 
-                    await ref.read(habitNotifierProvider.notifier).addHabit(title: titleHabit.text, desc: descHabit.text, time: timeHabit,date: formattedDate,status: statusHabit, uid: uid);
+                    await ref
+                        .read(habitNotifierProvider.notifier)
+                        .addHabit(
+                          title: titleHabit.text,
+                          desc: descHabit.text,
+                          time: timeHabit,
+                          date: formattedDate,
+                          status: statusHabit,
+                          uid: uid,
+                        );
 
-                    if(!context.mounted) return;
+                    if (!context.mounted) return;
 
-                      await showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text("Success"),
-                          content: const Text("Habit added successfully!"),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text("OK"),
-                            ),
-                          ],
-                        ),
-                      );
+                    CustomDialog.showNotifications(
+                      title: 'Success',
+                      message: 'Habit added successfully!',
+                      confirmText: 'OK',
+                    );
 
                     // Clear fields AFTER dialog is closed
                     titleHabit.clear();
                     descHabit.clear();
-
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF2FB969),

@@ -13,7 +13,11 @@ import 'package:habitly_mission/presentation/screens/register_screen.dart';
 import 'presentation/screens/splash_screen.dart';
 import 'package:hive_ce/hive_ce.dart';
 
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async{
+
   WidgetsFlutterBinding.ensureInitialized();
 
   await Hive.initFlutter();
@@ -37,6 +41,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       darkTheme:ThemeData(
           brightness: Brightness.dark,
           textTheme: GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme)) ,
