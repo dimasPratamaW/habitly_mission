@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habitly_mission/presentation/screens/dashboard/update_habit_screen.dart';
 import 'package:habitly_mission/widget/custom_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:habitly_mission/presentation/state/auth_providers.dart';
@@ -67,6 +68,102 @@ class _HabitScheduleScreenState extends ConsumerState<HabitScheduleScreen> {
       ),
     );
   }
+
+  Widget _sortButton(dynamic colors){
+    return Column(
+      children: [
+        SizedBox(height: 5),
+        Text('Sort by Date'),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 10,
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: colors.border),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<HabitSort>(
+                value: ref.watch(habitSortProvider),
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                items: const [
+                  DropdownMenuItem(
+                    value: HabitSort.dateNewest,
+                    child: Text('Newest'),
+                  ),
+                  DropdownMenuItem(
+                    value: HabitSort.dateOldest,
+                    child: Text('Oldest'),
+                  ),
+                ],
+                onChanged: (value) {
+                  if (value != null) {
+                    ref.read(habitSortProvider.notifier).state =
+                        value;
+                  }
+                },
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  
+  Widget _filterButton(dynamic colors){
+    return Column(
+      children: [
+        SizedBox(height: 5),
+        Text('Filter by Status'),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 10,
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: colors.border),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<HabitFilter>(
+                value: ref.watch(habitFilterProvider),
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                items: const [
+                  DropdownMenuItem(
+                    value: HabitFilter.all,
+                    child: Text('All'),
+                  ),
+                  DropdownMenuItem(
+                    value: HabitFilter.upcoming,
+                    child: Text('Upcoming'),
+                  ),
+                  DropdownMenuItem(
+                    value: HabitFilter.ongoing,
+                    child: Text('Ongoing'),
+                  ),
+                  DropdownMenuItem(
+                    value: HabitFilter.completed,
+                    child: Text('Completed'),
+                  ),
+                ],
+                onChanged: (value) {
+                  if (value != null) {
+                    ref.read(habitFilterProvider.notifier).state =
+                        value;
+                  }
+                },
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final uid = ref.watch(currentUidProvider); // ← get uid
@@ -90,101 +187,15 @@ class _HabitScheduleScreenState extends ConsumerState<HabitScheduleScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               //SORT BUTTON
-              Column(
-                children: [
-                  SizedBox(height: 5),
-                  Text('Sort by Date'),
-                  Padding(
-                    padding: EdgeInsetsGeometry.symmetric(
-                      horizontal: 16,
-                      vertical: 10,
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: colors.border),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<HabitSort>(
-                          value: ref.watch(habitSortProvider),
-                          padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
-                          items: const [
-                            DropdownMenuItem(
-                              value: HabitSort.dateNewest,
-                              child: Text('Newest'),
-                            ),
-                            DropdownMenuItem(
-                              value: HabitSort.dateOldest,
-                              child: Text('Oldest'),
-                            ),
-                          ],
-                          onChanged: (value) {
-                            if (value != null) {
-                              ref.read(habitSortProvider.notifier).state =
-                                  value;
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              _sortButton(colors),
               //FILTER BUTTON
-              Column(
-                children: [
-                  SizedBox(height: 5),
-                  Text('Filter by Status'),
-                  Padding(
-                    padding: EdgeInsetsGeometry.symmetric(
-                      horizontal: 16,
-                      vertical: 10,
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: colors.border),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<HabitFilter>(
-                          value: ref.watch(habitFilterProvider),
-                          padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
-                          items: const [
-                            DropdownMenuItem(
-                              value: HabitFilter.all,
-                              child: Text('All'),
-                            ),
-                            DropdownMenuItem(
-                              value: HabitFilter.upcoming,
-                              child: Text('Upcoming'),
-                            ),
-                            DropdownMenuItem(
-                              value: HabitFilter.ongoing,
-                              child: Text('Ongoing'),
-                            ),
-                            DropdownMenuItem(
-                              value: HabitFilter.completed,
-                              child: Text('Completed'),
-                            ),
-                          ],
-                          onChanged: (value) {
-                            if (value != null) {
-                              ref.read(habitFilterProvider.notifier).state =
-                                  value;
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              _filterButton(colors)
             ],
           ),
           SizedBox(height: 10),
           Padding(
             // text title my Habit
-            padding: EdgeInsetsGeometry.directional(start: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(
               'My Habit',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -253,23 +264,32 @@ class _HabitScheduleScreenState extends ConsumerState<HabitScheduleScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 5),
-                                  Text('${activity.date} - ${activity.time}'),
-                                  SizedBox(height: 5),
-                                  Text(
-                                    activity.title,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
+                              Expanded(
+                                child: InkWell(
+                                onTap:(){
+                                  Navigator.pushNamed(context,UpdateHabitScreen.routeName,arguments: {
+                                    'uid':uid, 'habitId':activity.id
+                                  });
+                                },
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(height: 5),
+                                      Text('${activity.date} - ${activity.time}'),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        activity.title,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(activity.desc),
+                                      SizedBox(height: 10),
+                                    ],
                                   ),
-                                  SizedBox(height: 5),
-                                  Text(activity.desc),
-                                  SizedBox(height: 10),
-                                ],
+                                ),
                               ),
                               Column(
                                 children: [

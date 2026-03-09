@@ -8,6 +8,11 @@ class HabitRepositoriesImplements implements IHabitRepositories{
   HabitRepositoriesImplements(this._datasource);
 
   @override
+  Stream<List<HabitEntity>> getHabits(String uid) {
+    return _datasource.getHabits(uid);
+  }
+
+  @override
   Future<void> addHabit(HabitEntity habit) async {
     await _datasource.addHabit(HabitModel(id: habit.id, title: habit.title, desc: habit.desc, time: habit.time,date: habit.date,status: habit.status, uid: habit.uid));
   }
@@ -18,8 +23,8 @@ class HabitRepositoriesImplements implements IHabitRepositories{
   }
 
   @override
-  Stream<List<HabitEntity>> getHabits(String uid) {
-    return _datasource.getHabits(uid);
+  Future<void> updateHabit(String uid, String habitId, HabitEntity habit)async{
+    await _datasource.updateHabit(uid, habitId, HabitModel(id: habit.id, title: habit.title, desc: habit.desc, time: habit.time, date: habit.date, status: habit.status, uid: habit.uid));
   }
 
 }

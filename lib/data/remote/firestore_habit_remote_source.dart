@@ -31,4 +31,9 @@ class FirestoreHabitRemoteSource implements IHabitRemoteSource {
     await _habitCollection(uid).doc(habitId).delete();
   }
 
+  @override
+  Future<void> updateHabit(String uid,String habitId, HabitModel habit) async {
+    await _habitCollection(uid).doc(habitId).update(habit.toMap());
+  }
+
 }

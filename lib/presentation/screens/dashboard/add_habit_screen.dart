@@ -96,7 +96,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
               ),
               SizedBox(height: 10),
               Padding(
-                padding: EdgeInsetsGeometry.symmetric(horizontal: 40),
+                padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Card(
                   color: Color(0XFFECE6F0),
                   child: Column(
@@ -104,7 +104,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                       SizedBox(height: 10),
                       Text('When you do the habit ?'),
                       Padding(
-                        padding: EdgeInsetsGeometry.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 20,
                           vertical: 2,
                         ),
@@ -135,7 +135,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                       SizedBox(height: 10),
                       Text('When we should remind you ?'), //time OPTIONS
                       Padding(
-                        padding: EdgeInsetsGeometry.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 10,
                           horizontal: 20,
                         ),
@@ -159,7 +159,7 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
                       Text('Status of habit?'),
                       Padding(
                         // Status
-                        padding: EdgeInsetsGeometry.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           vertical: 10,
                           horizontal: 20,
                         ),

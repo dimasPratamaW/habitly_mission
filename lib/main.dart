@@ -10,8 +10,10 @@ import 'package:habitly_mission/presentation/screens/initiate_pages/dashboard_ha
 import 'package:habitly_mission/presentation/screens/initiate_pages/dashboard_time.dart';
 import 'package:habitly_mission/presentation/screens/login_screen.dart';
 import 'package:habitly_mission/presentation/screens/register_screen.dart';
+import 'package:habitly_mission/presentation/screens/dashboard/update_habit_screen.dart';
 import 'presentation/screens/splash_screen.dart';
 import 'package:hive_ce/hive_ce.dart';
+
 
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -56,7 +58,8 @@ class MyApp extends StatelessWidget {
         RegisterView.routeName: (_) => const RegisterScreen(),
         DashboardHabit.routeName: (_) => const DashboardHabit(),
         DashboardTime.routeName: (_) => const DashboardTime(),
-        DashboardScreen.routeName: (_) => const DashboardScreen()
+        DashboardScreen.routeName: (_) => const DashboardScreen(),
+        UpdateHabitScreen.routeName: (_) => const UpdateHabitScreen(),
       },
     );
   }

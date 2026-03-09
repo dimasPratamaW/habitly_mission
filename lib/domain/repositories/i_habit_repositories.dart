@@ -4,5 +4,5 @@ abstract class IHabitRepositories {
   Stream<List<HabitEntity>>getHabits(String uid);
   Future<void> addHabit(HabitEntity habit);
   Future<void> deleteHabit(String uid, String habitId);
-
+  Future<void> updateHabit(String uid, String habitId, HabitEntity habit);
 }
