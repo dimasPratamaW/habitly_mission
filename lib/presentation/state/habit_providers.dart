@@ -32,7 +32,7 @@ final habitStreamProvider = StreamProvider.family<List<HabitEntity>,String>((ref
 });
 
 
-// this is for add and deleting habit
+// this is for add, updating, and deleting habit
 final habitNotifierProvider = AsyncNotifierProvider<HabitStateNotifier,List<HabitEntity>>((){
   return HabitStateNotifier();
 });

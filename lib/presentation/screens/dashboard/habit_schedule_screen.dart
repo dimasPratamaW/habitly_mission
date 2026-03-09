@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:habitly_mission/presentation/state/auth_providers.dart';
 import 'package:habitly_mission/presentation/state/habit_providers.dart';
 import 'package:habitly_mission/style/app_color.dart';
+import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class HabitScheduleScreen extends ConsumerStatefulWidget {
@@ -24,15 +25,81 @@ class _HabitScheduleScreenState extends ConsumerState<HabitScheduleScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
   bool _showAll = true;
 
-  Widget _calendarTable() {
+  // ─── COUNT CHIP ────────────────────────────────────────────────────────────
+  Widget _countChip(String label, int count, Color color) {
+    return Chip(
+      label: Text(
+        '$label: $count',
+        style: const TextStyle(fontSize: 12, color: Colors.white),
+      ),
+      backgroundColor: color,
+      padding: EdgeInsets.zero,
+    );
+  }
+
+  // ─── PROGRESS SECTION (chips) ──────────────────────────────────────────────
+  Widget _progressSection(List activities) {
+    final total = activities.length;
+    final completed =
+        activities.where((h) => h.status == 'Completed').length;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Row(
+        children: [
+          _countChip('Total', total, Colors.blue),
+          const SizedBox(width: 8),
+          _countChip(
+            'Upcoming',
+            activities.where((h) => h.status == 'Upcoming').length,
+            Colors.orange,
+          ),
+          const SizedBox(width: 8),
+          _countChip(
+            'Ongoing',
+            activities.where((h) => h.status == 'Ongoing').length,
+            Colors.purple,
+          ),
+          const SizedBox(width: 8),
+          _countChip('Done', completed, Colors.green),
+        ],
+      ),
+    );
+  }
+
+
+  Widget _calendarTable(List activities) {
+    final total = activities.length;
+    final completed =
+        activities.where((h) => h.status == 'Completed').length;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Column(
         children: [
-          // ← reset button above calendar
-          Row(
+          Row(// ← reset button above calendar
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '$completed / $total completed',
+                      style:
+                      const TextStyle(color: Colors.black, fontSize: 12),
+                    ),
+                    const SizedBox(height: 4),
+                    LinearProgressIndicator(
+                      value: total == 0 ? 0 : completed / total,
+                      backgroundColor: Colors.grey.shade300,
+                      color: Colors.blue,
+                      minHeight: 10,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
               TextButton.icon(
                 onPressed: () => setState(() => _showAll = true),
                 icon: const Icon(Icons.filter_alt_off, size: 16),
@@ -111,7 +178,7 @@ class _HabitScheduleScreenState extends ConsumerState<HabitScheduleScreen> {
       ],
     );
   }
-  
+
   Widget _filterButton(dynamic colors){
     return Column(
       children: [
@@ -168,7 +235,6 @@ class _HabitScheduleScreenState extends ConsumerState<HabitScheduleScreen> {
   Widget build(BuildContext context) {
     final uid = ref.watch(currentUidProvider); // ← get uid
     final colors = AppColors.of(context);
-
     final sortOption = ref.watch(habitSortProvider);
     final filterOption = ref.watch(habitFilterProvider);
     final selectedDateStr = DateFormat("dd/MM/yyyy").format(_selectedDay);
@@ -181,8 +247,12 @@ class _HabitScheduleScreenState extends ConsumerState<HabitScheduleScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _calendarTable(),
-          SizedBox(height: 10),
+          pullData.when(
+            data: (activities) => _calendarTable(activities),
+            loading: () => _calendarTable([]),
+            error: (_, __) => _calendarTable([]),
+          ),
+          const SizedBox(height: 6),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

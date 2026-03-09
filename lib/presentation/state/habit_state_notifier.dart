@@ -33,4 +33,11 @@ class HabitStateNotifier extends AsyncNotifier<List<HabitEntity>> {
   Future<void>deleteHabit(String uid, String habitId) async{
     await ref.read(habitRepositoryProvider).deleteHabit(uid, habitId);
   }
+
+  Future<void> updateHabit(String uid, String habitId, HabitModel habit) async {
+    await ref.read(habitRepositoryProvider).updateHabit(uid, habitId, habit);
+  }
+
+
+
 }
