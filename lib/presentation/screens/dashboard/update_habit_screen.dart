@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habitly_mission/presentation/state/habit_providers.dart';
+import 'package:habitly_mission/style/app_color.dart';
 
 import '../../../data/models/habit_model.dart';
 import '../../../widget/custom_dialog.dart';
@@ -40,6 +41,7 @@ class _UpdateHabitScreenState extends ConsumerState<UpdateHabitScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final args = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
     final pullData = ref.watch(habitStreamProvider(args['uid']!));
 
@@ -54,6 +56,7 @@ class _UpdateHabitScreenState extends ConsumerState<UpdateHabitScreen> {
     _selectedStatus ??= getHabitDetail.status;
 
     return Scaffold(
+      backgroundColor: colors.background,
       appBar: AppBar(title: Text(getHabitDetail.title)),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -61,7 +64,6 @@ class _UpdateHabitScreenState extends ConsumerState<UpdateHabitScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 16),
-            // DETAIL CARD
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),

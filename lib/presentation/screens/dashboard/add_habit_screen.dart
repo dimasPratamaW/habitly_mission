@@ -65,180 +65,182 @@ class _AddHabitScreenState extends ConsumerState<AddHabitScreen> {
 
     return Scaffold(
       backgroundColor: colors.background,
-      body: Center(
-        child: Form(
-          key: formKey,
-          child: Column(
-            children: [
-              SizedBox(height: 20),
-              CustomField(
-                label: 'Habit Name',
-                backgroundColor: Colors.white,
-                controller: titleHabit,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'cant be empty';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 10),
-              CustomField(
-                label: 'Habit Description',
-                backgroundColor: Colors.white,
-                controller: descHabit,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'cant be empty';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: Card(
-                  color: Color(0XFFECE6F0),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 10),
-                      Text('When you do the habit ?'),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 2,
-                        ),
-                        child: GestureDetector(
-                          onTap: pickDate,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.grey),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  formattedDate, // ← shows DD/MM/YYYY
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                                const Icon(Icons.calendar_today),
-                              ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                SizedBox(height: 20),
+                CustomField(
+                  label: 'Habit Name',
+                  backgroundColor: Colors.white,
+                  controller: titleHabit,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'cant be empty';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 10),
+                CustomField(
+                  label: 'Habit Description',
+                  backgroundColor: Colors.white,
+                  controller: descHabit,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'cant be empty';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Card(
+                    color: Color(0XFFECE6F0),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 10),
+                        Text('When you do the habit ?'),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 2,
+                          ),
+                          child: GestureDetector(
+                            onTap: pickDate,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.grey),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    formattedDate, // ← shows DD/MM/YYYY
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                  const Icon(Icons.calendar_today),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: 10),
-                      Text('When we should remind you ?'), //time OPTIONS
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 20,
+                        SizedBox(height: 10),
+                        Text('When we should remind you ?'), //time OPTIONS
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 20,
+                          ),
+                          child: DropdownMenu<String>(
+                            width: double.infinity,
+                            initialSelection: timeOptions[0],
+                            dropdownMenuEntries: timeOptions.map((value) {
+                              return DropdownMenuEntry<String>(
+                                value: value,
+                                label: value,
+                              );
+                            }).toList(),
+                            onSelected: (value) {
+                              if (value != null) {
+                                timeHabit = value;
+                              }
+                            },
+                          ),
                         ),
-                        child: DropdownMenu<String>(
-                          width: double.infinity,
-                          initialSelection: timeOptions[0],
-                          dropdownMenuEntries: timeOptions.map((value) {
-                            return DropdownMenuEntry<String>(
-                              value: value,
-                              label: value,
-                            );
-                          }).toList(),
-                          onSelected: (value) {
-                            if (value != null) {
-                              timeHabit = value;
-                            }
-                          },
+                        SizedBox(height: 10),
+                        Text('Status of habit?'),
+                        Padding(
+                          // Status
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 20,
+                          ),
+                          child: DropdownMenu<String>(
+                            width: double.infinity,
+                            initialSelection: statusOptions[0],
+                            dropdownMenuEntries: statusOptions.map((value) {
+                              return DropdownMenuEntry<String>(
+                                value: value,
+                                label: value,
+                              );
+                            }).toList(),
+                            onSelected: (value) {
+                              if (value != null) {
+                                statusHabit = value;
+                              }
+                            },
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 10),
-                      Text('Status of habit?'),
-                      Padding(
-                        // Status
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 20,
-                        ),
-                        child: DropdownMenu<String>(
-                          width: double.infinity,
-                          initialSelection: statusOptions[0],
-                          dropdownMenuEntries: statusOptions.map((value) {
-                            return DropdownMenuEntry<String>(
-                              value: value,
-                              label: value,
-                            );
-                          }).toList(),
-                          onSelected: (value) {
-                            if (value != null) {
-                              statusHabit = value;
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-              Padding(
-                padding: EdgeInsetsGeometry.directional(start: 30, end: 30),
-                child: ElevatedButton(
-                  //button register
-                  onPressed: () async {
-                    if (!formKey.currentState!.validate()) return;
-                    if (uid == null) return;
-
-                    // await ref.read(habitListProvider.notifier).addHabit(
-                    //   titleHabit.text,
-                    //   descHabit.text,
-                    //   timeHabit,
-                    // );
-
-                    await ref
-                        .read(habitNotifierProvider.notifier)
-                        .addHabit(
-                          title: titleHabit.text,
-                          desc: descHabit.text,
-                          time: timeHabit,
-                          date: formattedDate,
-                          status: statusHabit,
-                          uid: uid,
-                        );
-
-                    if (!context.mounted) return;
-
-                    CustomDialog.showNotifications(
-                      title: 'Success',
-                      message: 'Habit added successfully!',
-                      confirmText: 'OK',
-                    );
-
-                    // Clear fields AFTER dialog is closed
-                    titleHabit.clear();
-                    descHabit.clear();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF2FB969),
-                    minimumSize: const Size(double.infinity, 40),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusGeometry.circular(10),
-                    ),
-                  ),
-                  child: const Text(
-                    "Save habit",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Colors.white,
+                      ],
                     ),
                   ),
                 ),
-              ),
-            ],
+                SizedBox(height: 10),
+                Padding(
+                  padding: EdgeInsetsGeometry.directional(start: 30, end: 30),
+                  child: ElevatedButton(
+                    //button register
+                    onPressed: () async {
+                      if (!formKey.currentState!.validate()) return;
+                      if (uid == null) return;
+        
+                      // await ref.read(habitListProvider.notifier).addHabit(
+                      //   titleHabit.text,
+                      //   descHabit.text,
+                      //   timeHabit,
+                      // );
+        
+                      await ref
+                          .read(habitNotifierProvider.notifier)
+                          .addHabit(
+                            title: titleHabit.text,
+                            desc: descHabit.text,
+                            time: timeHabit,
+                            date: formattedDate,
+                            status: statusHabit,
+                            uid: uid,
+                          );
+        
+                      if (!context.mounted) return;
+        
+                      CustomDialog.showNotifications(
+                        title: 'Success',
+                        message: 'Habit added successfully!',
+                        confirmText: 'OK',
+                      );
+        
+                      // Clear fields AFTER dialog is closed
+                      titleHabit.clear();
+                      descHabit.clear();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF2FB969),
+                      minimumSize: const Size(double.infinity, 40),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadiusGeometry.circular(10),
+                      ),
+                    ),
+                    child: const Text(
+                      "Save habit",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

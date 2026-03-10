@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habitly_mission/presentation/screens/dashboard/detail_all_habit.dart';
 import 'package:habitly_mission/presentation/screens/dashboard/update_habit_screen.dart';
 import 'package:habitly_mission/widget/custom_dialog.dart';
 import 'package:intl/intl.dart';
@@ -10,7 +11,7 @@ import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class HabitScheduleScreen extends ConsumerStatefulWidget {
-  static const routeName = '/dashboard_schedule';
+  static const routeName = '/habit_schedule_screen';
 
   const HabitScheduleScreen({super.key});
 
@@ -25,49 +26,6 @@ class _HabitScheduleScreenState extends ConsumerState<HabitScheduleScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
   bool _showAll = true;
 
-  // ─── COUNT CHIP ────────────────────────────────────────────────────────────
-  Widget _countChip(String label, int count, Color color) {
-    return Chip(
-      label: Text(
-        '$label: $count',
-        style: const TextStyle(fontSize: 12, color: Colors.white),
-      ),
-      backgroundColor: color,
-      padding: EdgeInsets.zero,
-    );
-  }
-
-  // ─── PROGRESS SECTION (chips) ──────────────────────────────────────────────
-  Widget _progressSection(List activities) {
-    final total = activities.length;
-    final completed =
-        activities.where((h) => h.status == 'Completed').length;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Row(
-        children: [
-          _countChip('Total', total, Colors.blue),
-          const SizedBox(width: 8),
-          _countChip(
-            'Upcoming',
-            activities.where((h) => h.status == 'Upcoming').length,
-            Colors.orange,
-          ),
-          const SizedBox(width: 8),
-          _countChip(
-            'Ongoing',
-            activities.where((h) => h.status == 'Ongoing').length,
-            Colors.purple,
-          ),
-          const SizedBox(width: 8),
-          _countChip('Done', completed, Colors.green),
-        ],
-      ),
-    );
-  }
-
-
   Widget _calendarTable(List activities) {
     final total = activities.length;
     final completed =
@@ -80,23 +38,39 @@ class _HabitScheduleScreenState extends ConsumerState<HabitScheduleScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '$completed / $total completed',
-                      style:
-                      const TextStyle(color: Colors.black, fontSize: 12),
-                    ),
-                    const SizedBox(height: 4),
-                    LinearProgressIndicator(
-                      value: total == 0 ? 0 : completed / total,
-                      backgroundColor: Colors.grey.shade300,
-                      color: Colors.blue,
-                      minHeight: 10,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ],
+                child: InkWell(
+                  onTap: (){
+                    Navigator.pushNamed(context, DetailAllHabit.routeName);
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '$completed / $total completed',
+                        style:
+                        const TextStyle(color: Colors.black, fontSize: 12),
+                      ),
+                      const SizedBox(height: 4),
+                      LinearProgressIndicator(
+                        value: total == 0 ? 0 : completed / total,
+                        backgroundColor: Colors.grey.shade300,
+                        color: Colors.blue,
+                        minHeight: 10,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            'click here for the detail ...',
+                            style:
+                            const TextStyle(color: Colors.black54, fontSize: 12),
+                          ),
+                        ],
+                      )
+
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(width: 8),
