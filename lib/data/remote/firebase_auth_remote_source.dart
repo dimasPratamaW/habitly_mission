@@ -10,7 +10,7 @@ class AuthException implements Exception {
   AuthException(this.code, this.message);
 
   @override
-  String toString() => message; // ← shows readable message in snackbar
+  String toString() => message;
 }
 
 

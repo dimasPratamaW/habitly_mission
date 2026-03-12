@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -6,7 +5,6 @@ import 'package:habitly_mission/data/models/app_user_model.dart';
 import 'package:habitly_mission/data/remote/i_auth_remote_source.dart';
 import 'package:habitly_mission/domain/entities/auth_credentials.dart';
 import 'package:habitly_mission/main.dart';
-import 'package:habitly_mission/presentation/screens/login_screen.dart';
 import 'package:habitly_mission/presentation/screens/register_screen.dart';
 import 'package:habitly_mission/presentation/state/auth_providers.dart';
 
@@ -61,4 +59,11 @@ void main(){
 
     expect(find.text('Register Account'), findsNothing);
   });
+
+  testWidgets('register fail : all of the textformfield is empty', (WidgetTester tester)async{
+    await tester.tap(find.text('Register Account'));
+    await tester.pumpAndSettle();
+    expect(find.text('cant be empty'), findsWidgets);
+  });
+
 }

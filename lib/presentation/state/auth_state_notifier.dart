@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habitly_mission/domain/entities/user_entity.dart';
 import 'package:habitly_mission/domain/entities/auth_credentials.dart';
 import 'package:habitly_mission/presentation/state/auth_providers.dart';
-
 import 'package:habitly_mission/data/models/app_user_model.dart';
 
 class AuthStateNotifier extends AsyncNotifier<UserEntity?>{

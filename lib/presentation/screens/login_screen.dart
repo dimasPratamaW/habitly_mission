@@ -37,11 +37,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         .timeout(
           const Duration(seconds: 15),
           onTimeout: () {
-            if(!mounted)return;
+            if (!mounted) return;
             setState(() => isLoading = false);
             CustomDialog.showNotifications(
               title: "Timeout",
-              message:'Connection timeout. Check your internet!', confirmText: 'Confirm' ,
+              message: 'Connection timeout. Check your internet!',
+              confirmText: 'Confirm',
             );
           },
         );
@@ -60,7 +61,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         });
         CustomDialog.showNotifications(
           title: "ERROR",
-          confirmText: 'Confirm', message:e.toString() ,
+          confirmText: 'Confirm',
+          message: e.toString(),
         );
       },
       loading: () {},
@@ -134,7 +136,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {//RENDER SCREEN----------------
+  Widget build(BuildContext context) {
+    //RENDER SCREEN----------------
     final colors = AppColors.of(context);
 
     return Scaffold(
@@ -225,7 +228,7 @@ class _PasswordFieldState extends State<_PasswordField> {
     return CustomField(
       label: 'password',
       controller: widget.controller, // ← access via widget.
-      obsecure: _isObscure,          // ← controlled by state
+      obsecure: _isObscure, // ← controlled by state
       validator: validatorInput,
       icon: _isObscure ? Icons.visibility_off : Icons.visibility,
       toggle: () => setState(() => _isObscure = !_isObscure),
