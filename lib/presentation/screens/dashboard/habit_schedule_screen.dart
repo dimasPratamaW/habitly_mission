@@ -336,6 +336,7 @@ class _HabitScheduleScreenState extends ConsumerState<HabitScheduleScreen> {
                                 ),
                               ),
                               Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text('Status : ${activity.status}'),
                                   ElevatedButton(

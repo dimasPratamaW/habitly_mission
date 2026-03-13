@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:habitly_mission/presentation/screens/dashboard/detail_all_habit.dart';
+import 'package:habitly_mission/presentation/state/notification_local.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:habitly_mission/firebase_options.dart';
 import 'package:habitly_mission/data/models/list_habit_hive.dart';
@@ -32,6 +33,8 @@ void main() async{
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await NotificationLocal().initNotification();
 
   runApp(
 

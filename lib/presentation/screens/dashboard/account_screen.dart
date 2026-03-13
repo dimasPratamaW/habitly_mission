@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habitly_mission/presentation/state/auth_providers.dart';
 import 'package:habitly_mission/presentation/screens/login_screen.dart';
+import 'package:habitly_mission/presentation/state/notification_local.dart';
 
 class AccountScreen extends ConsumerWidget {
   const AccountScreen({
@@ -29,7 +30,13 @@ class AccountScreen extends ConsumerWidget {
             await ref.read(authNotifierProvider.notifier).logout();
             if(!context.mounted)return;
             Navigator.pushReplacementNamed(context, LoginScreen.routeName);
-          }, child: const Text('logout'))
+          }, child: const Text('logout')),
+          ElevatedButton(onPressed: (){
+            NotificationLocal().showNotification(
+            title: "testing",
+              body: 'body testing'
+            );
+          }, child: const Text("testing Notification"))
         ],
       ),
     );
