@@ -44,6 +44,7 @@ dependencies:
   firebase_auth: ^6.1.4
   cloud_firestore: ^6.1.2
   linear_progress_bar: ^3.0.0
+  fl_chart: ^1.1.1
 
 dev_dependencies:
   flutter_test:

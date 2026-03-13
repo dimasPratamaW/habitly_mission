@@ -14,7 +14,7 @@ class AuthException implements Exception {
 }
 
 
-class FirebaseAuthRemoteSource implements IAuthRemoteSource{
+class FirebaseAuthRemoteSource implements IAuthRemoteSource{// this is when firebase get called and checking if the user exist
   final FirebaseAuth _auth;
   FirebaseAuthRemoteSource (this._auth);
 

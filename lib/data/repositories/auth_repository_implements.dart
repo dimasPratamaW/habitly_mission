@@ -6,10 +6,9 @@ import 'package:habitly_mission/domain/repositories/i_auth_repositories.dart';
 class AuthRepositoryImplements implements IAuthRepositories{
   final IAuthRemoteSource _datasource;
   AuthRepositoryImplements(this._datasource);
-
+  // this is the BRIDGE for the app telling file that handling firebase so if firebase needed change we dont need change the whole thing
   @override
   Future<UserEntity> login(AuthCredentials authcredentials) async {
-    // TODO: implement login
     final model = await _datasource.login(authcredentials);
 
     return model;
