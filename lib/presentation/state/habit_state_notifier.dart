@@ -2,9 +2,12 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habitly_mission/domain/entities/habit_entity.dart';
 import 'package:habitly_mission/data/models/habit_model.dart';
+import 'package:habitly_mission/notification/notification_local.dart';
 import 'package:habitly_mission/presentation/state/habit_providers.dart';
 
 class HabitStateNotifier extends AsyncNotifier<List<HabitEntity>> {
+  final _notif = NotificationLocal();
+
   @override
   Future<List<HabitModel>> build() async => [];
 
@@ -28,7 +31,12 @@ class HabitStateNotifier extends AsyncNotifier<List<HabitEntity>> {
     );
 
     await ref.read(habitRepositoryProvider).addHabit(habit);
+    await _notif.initNotification();
+    await _notif.scheduleHabitNotification(habit);
   }
+
+
+
 
   Future<void>deleteHabit(String uid, String habitId) async{
     await ref.read(habitRepositoryProvider).deleteHabit(uid, habitId);

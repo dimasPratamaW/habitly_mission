@@ -8,14 +8,18 @@ import 'package:habitly_mission/domain/repositories/i_habit_repositories.dart';
 import 'package:habitly_mission/presentation/state/habit_state_notifier.dart';
 import 'package:habitly_mission/data/repositories/habit_repositories_implements.dart';
 
+
+// floor 1 - initiate the firestore instance
 final firestoreProvider = Provider<FirebaseFirestore>((ref){
   return FirebaseFirestore.instance;
 });
 
+// floor 2 - call the firestore
 final habitDatasourceProvider = Provider<IHabitRemoteSource>((ref){
   return FirestoreHabitRemoteSource(ref.watch(firestoreProvider));
 });
 
+// floor 3 - bridge the data before its goes to APP with abstract and what data that does get handled
 final habitRepositoryProvider = Provider<IHabitRepositories>((ref){
   return HabitRepositoriesImplements(ref.watch(habitDatasourceProvider));
 });
@@ -27,12 +31,13 @@ enum HabitFilter {all, upcoming, ongoing, completed}
 final habitSortProvider = StateProvider<HabitSort>((ref)=> HabitSort.dateNewest);
 final habitFilterProvider = StateProvider<HabitFilter>((ref)=>HabitFilter.all);
 
+// floor 4 - use the data from the bridge - this one is for pull the data of habit
 final habitStreamProvider = StreamProvider.family<List<HabitEntity>,String>((ref,uid){
   return ref.watch(habitRepositoryProvider).getHabits(uid);
 });
 
 
-// this is for add, updating, and deleting habit
+// floor 4 - this is for add, updating, and deleting habit
 final habitNotifierProvider = AsyncNotifierProvider<HabitStateNotifier,List<HabitEntity>>((){
   return HabitStateNotifier();
 });
