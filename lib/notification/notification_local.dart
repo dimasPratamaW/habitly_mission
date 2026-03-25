@@ -19,8 +19,8 @@ class NotificationLocal {
 
     // initiating time for reminder notification
     tzData.initializeTimeZones();
-    final String currentTimeZone = FlutterTimezone.getLocalTimezone().toString();
-    tz.setLocalLocation(tz.getLocation(currentTimeZone));
+    final TimezoneInfo currentTimeZone = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(currentTimeZone.identifier));
 
 
     //1. First initialize Icon for notifications
@@ -53,14 +53,32 @@ class NotificationLocal {
 
   // core method  - takes data
   Future<void> scheduleHabitNotification (HabitEntity habit) async{
+    final dateParts = habit.date.split('/');
+    final timeParts = habit.time.split(':');
+
+    final int day = int.parse(dateParts[0]);
+    final int month = int.parse(dateParts[1]);
+    final int year = int.parse(dateParts[2]);
+    final int hour = int.parse(timeParts[0]);
+    final int minute = int.parse(timeParts[1]);
+
+    final scheduledDate = tz.TZDateTime(
+      tz.local,
+      year,
+      month,
+      day,
+      hour,
+      minute,
+    );
+
+
+
     await notificationsPlugin.zonedSchedule(
         id: habit.id.hashCode,
         title: habit.title,
         body: habit.desc,
         notificationDetails: _notificationDetails(),
-        scheduledDate: tz.TZDateTime.now(
-          tz.local,
-        ).add(const Duration(seconds: 5)),
+        scheduledDate: scheduledDate.add(const Duration(seconds: 5)),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle);
   }
 

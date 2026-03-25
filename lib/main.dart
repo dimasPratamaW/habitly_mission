@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,15 +14,13 @@ import 'package:habitly_mission/presentation/screens/initiate_pages/dashboard_ti
 import 'package:habitly_mission/presentation/screens/login_screen.dart';
 import 'package:habitly_mission/presentation/screens/register_screen.dart';
 import 'package:habitly_mission/presentation/screens/dashboard/update_habit_screen.dart';
+import 'notification/notification_handler_fcm.dart';
 import 'presentation/screens/splash_screen.dart';
 import 'package:hive_ce/hive_ce.dart';
 
-
-
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-void main() async{
-
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Hive.initFlutter();
@@ -30,17 +29,17 @@ void main() async{
 
   await Hive.openBox<ListHabitHive>('list_habit');
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-
+  // Register background handler
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   await NotificationLocal().initNotification();
 
-  runApp(
+  await NotificationHandlerFcm.instance.init();
 
-      const ProviderScope(child: MyApp()));
+
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -50,12 +49,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: navigatorKey,
-      darkTheme:ThemeData(
-          brightness: Brightness.dark,
-          textTheme: GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme)) ,
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        textTheme: GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme),
+      ),
       theme: ThemeData(
-          brightness: Brightness.light,
-          textTheme: GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme)),
+        brightness: Brightness.light,
+        textTheme: GoogleFonts.urbanistTextTheme(Theme.of(context).textTheme),
+      ),
       themeMode: ThemeMode.system,
       initialRoute: SplashScreen.routeName,
       routes: {
